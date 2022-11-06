@@ -5,6 +5,7 @@ import morgan from "morgan";
 
 import teamRoutes from "./routes/team/team.routes.js";
 import groupRoutes from "./routes/group/group.routes.js";
+import matchRoutes from "./routes/match/match.routes.js";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use(teamRoutes);
 app.use(groupRoutes);
+app.use(matchRoutes);
 //AGERGAR MATCH TAMBIEN
 
 const CONNECTION_URL = "mongodb+srv://pablo:40142329@cluster0.nn5qyj7.mongodb.net/?retryWrites=true&w=majority";
