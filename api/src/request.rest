@@ -1,0 +1,22 @@
+@api = http://localhost:3001
+### GET ALL GROUPS
+GET {{api}}/groups
+
+### GET ONE GROUP
+GET {{api}}/groups/C
+
+### CREATE GROUPS
+POST {{api}}/groups
+
+### GET TEAMS
+GET {{api}}/teams 
+
+### CREATE TEAM
+POST {{api}}/teams
+Content-Type: application/json
+
+{
+  "teamName": "Inglaterra", "group": "B"
+}
+
+### 
