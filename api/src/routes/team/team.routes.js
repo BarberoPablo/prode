@@ -1,11 +1,11 @@
 import { Router } from "express";
 import * as teamController from "./team.controller.js";
 
-const router = Router();
+const app = Router();
 
-router.get("/teams", teamController.getAllTeams);
-router.get("/teams/:name", teamController.getTeam);
+app.get("/teams", teamController.getAllTeams);
+app.get("/teams/:name", teamController.getTeam);
 
-router.post("/teams", teamController.createTeam);
+app.post("/teams", teamController.createTeam);
 
-export default router;
+export default app;
