@@ -43,3 +43,37 @@ export const createGroupStageMatches = async (req, res) => {
     res.status(400).send(error.message);
   }
 };
+
+export const createRound16Matches = async (req, res) => {
+  try {
+    let teams = await Team.find({ round16: { $ne: null } });
+    let odd = false;
+
+    teams = teams.sort((a, b) => Number(a.round16 > b.round16) * 2 - 1);
+
+    for (let i = 0; i < 8; i++) {
+      if (odd) {
+        //console.log(`${teams[i].round16} vs ${teams[i + 8 - 1].round16}`);
+        await Match.create({
+          teamA: { name: teams[i].name, group: teams[i].group },
+          teamB: { name: teams[i + 8 - 1].name, group: teams[i + 8 - 1].group },
+          instance: "round16",
+        });
+        odd = !odd;
+      } else {
+        //console.log(`${teams[i].round16} vs ${teams[i + 8 + 1].round16}`);
+        await Match.create({
+          teamA: { name: teams[i].name, group: teams[i].group },
+          teamB: { name: teams[i + 8 + 1].name, group: teams[i + 8 + 1].group },
+          instance: "round16",
+        });
+        odd = !odd;
+      }
+    }
+    const round16Matches = await Match.find({ instance: "round16" });
+
+    res.status(201).json(round16Matches);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
