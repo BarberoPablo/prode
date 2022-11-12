@@ -4,9 +4,12 @@ import * as matchController from "./match.controller.js";
 
 const app = Router();
 
-app.get("/matches/:instance", matchController.getMatches);
+app.get("/match/:instance", matchController.getMatches);
 
-app.post("/matches/groupStage", matchController.createGroupStageMatches);
-app.post("/matches/round16", matchController.createRound16Matches);
+app.post("/match/groupStage", matchController.createGroupStageMatches);
+app.post("/match/round16", matchController.createRound16Matches);
+
+app.put("/match/date/:matchId", matchController.setMatchDate);
+app.put("/match/date/", matchController.setGroupStageDates);
 
 export default app;
