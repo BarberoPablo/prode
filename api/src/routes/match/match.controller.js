@@ -34,7 +34,6 @@ export const createGroupStageMatches = async (req, res) => {
               name: teamsFromXGroup[j].name,
             }
           );
-          //console.log(teamsFromXGroup[i].name, teamsFromXGroup[j].name);
         }
       }
     }
@@ -53,7 +52,6 @@ export const createRound16Matches = async (req, res) => {
 
     for (let i = 0; i < 8; i++) {
       if (odd) {
-        //console.log(`${teams[i].round16} vs ${teams[i + 8 - 1].round16}`);
         await Match.create({
           teamA: { name: teams[i].name, group: teams[i].group },
           teamB: { name: teams[i + 8 - 1].name, group: teams[i + 8 - 1].group },
@@ -61,7 +59,6 @@ export const createRound16Matches = async (req, res) => {
         });
         odd = !odd;
       } else {
-        //console.log(`${teams[i].round16} vs ${teams[i + 8 + 1].round16}`);
         await Match.create({
           teamA: { name: teams[i].name, group: teams[i].group },
           teamB: { name: teams[i + 8 + 1].name, group: teams[i + 8 + 1].group },
@@ -73,6 +70,37 @@ export const createRound16Matches = async (req, res) => {
     const round16Matches = await Match.find({ instance: "round16" });
 
     res.status(201).json(round16Matches);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+export const setMatchDate = async (req, res) => {
+  const { matchId } = req.params;
+  const { date } = req.body;
+  try {
+    const matchDate = new Date(date);
+    console.log(matchDate);
+    const match = await Match.findByIdAndUpdate(matchId, { date: matchDate });
+
+    res.status(201).json(match);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+export const setGroupStageDates = async (req, res) => {
+  const { data } = req.body;
+  try {
+    const matches = await Match.where("teamA.name").equals("Argentina");
+    //Blog.$where('this.username.indexOf("val") !== -1').exec(function (err, docs) {});
+
+    /* for (let match in data) {
+      Match.find({ teamA: { $regex: "Argentina", $options: "i" } });
+    } */
+    console.log(matches);
+
+    res.status(201).json(matches);
   } catch (error) {
     res.status(400).send(error.message);
   }
