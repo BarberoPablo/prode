@@ -8,29 +8,40 @@ const Matches = () => {
       .then((data) => {
         return data.sort((a, b) => Number(a.teamA.name > b.teamA.name) * 2 - 1);
       });
-    //let realShit = response.json().sort((a, b) => Number(a.teamA.name > b.teamA.name) * 2 - 1);
-    //let response2 = response.json().sort((a, b) => Number(a.name > b.name) * 2 - 1);
+    setMatchesScores(
+      response.map((match) => {
+        return {
+          _id: match._id,
+          teamAScore: 0,
+          teamBScore: 0,
+        };
+      })
+    );
     return response;
   };
 
   const { data, status } = useQuery("matches", getMatches);
-  const [matchScore, setMatchScore] = useState({
-    teamAScore: "0",
-    teamBScore: "0",
-  });
 
-  const handleScore = (event) => {
-    const scoreInput = event.target;
-    setMatchScore({
-      ...matchScore,
-      [scoreInput.name]: scoreInput.value,
-    });
-    console.log(matchScore);
+  const [matchesScores, setMatchesScores] = useState([]);
+
+  const handleScore = (e, matchId) => {
+    e.preventDefault();
+
+    const findMatchWithId = (score) => {
+      if (score._id === matchId) return true;
+      return false;
+    };
+    const scoreIndex = matchesScores.findIndex(findMatchWithId);
+
+    let updatedMatches = [...matchesScores];
+    updatedMatches[scoreIndex][e.target.name] = e.target.value;
+
+    setMatchesScores(updatedMatches);
   };
 
-  const handleFinalScore = (event) => {
-    const finalScore = event.target;
-    console.log(finalScore);
+  const handleFinalScore = (e) => {
+    e.preventDefault();
+    console.log(matchesScores);
   };
 
   return (
@@ -39,8 +50,37 @@ const Matches = () => {
       {status === "loading" && <div> Cargando equipos </div>}
       {status === "error" && <div> Error al cargar los equipos </div>}
       {status === "success" && (
-        <>
+        <div>
           <div>
+            <form onSubmit={(e) => handleFinalScore(e)}>
+              <ol>
+                {data?.map((match) => {
+                  return (
+                    !match.winner && (
+                      <li key={match._id}>
+                        {match.teamA.name}
+                        <input
+                          type="number"
+                          name="teamAScore"
+                          min="0"
+                          max="10"
+                          onChange={(e) => handleScore(e, match._id)}
+                        />
+                        <input
+                          type="number"
+                          name="teamBScore"
+                          min="0"
+                          max="10"
+                          onChange={(e) => handleScore(e, match._id)}
+                        />
+                        {match.teamB.name}
+                      </li>
+                    )
+                  );
+                })}
+              </ol>
+              <button type="submit"> predecir </button>
+            </form>
             <p>Proximos partidos:</p>
             {data?.map((match) => {
               return (
@@ -48,23 +88,25 @@ const Matches = () => {
                   <div key={match._id}>
                     <form onSubmit={(e) => handleFinalScore(e)}>
                       {match.teamA.name}
-                      <input
-                        type="number"
-                        name="teamAScore"
-                        min="0"
-                        max="10"
-                        onChange={(e) => handleScore(e)}
-                      />
-                      VS
-                      {match.teamB.name}
-                      <input
-                        type="number"
-                        name="teamBScore"
-                        min="0"
-                        max="10"
-                        onChange={(e) => handleScore(e)}
-                      />
-                      <button> predecir </button>
+                      <div>
+                        <input
+                          type="number"
+                          name="teamAScore"
+                          min="0"
+                          max="10"
+                          onChange={(e) => handleScore(e)}
+                        />
+                        VS
+                        {match.teamB.name}
+                        <input
+                          type="number"
+                          name="teamBScore"
+                          min="0"
+                          max="10"
+                          onChange={(e) => handleScore(e)}
+                        />
+                        <button type="submit"> predecir </button>
+                      </div>
                     </form>
                   </div>
                 )
@@ -83,7 +125,7 @@ const Matches = () => {
               );
             })}
           </div>
-        </>
+        </div>
       )}
     </div>
   );
