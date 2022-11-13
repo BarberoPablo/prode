@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import configuration from "../configuration";
 
 const Matches = () => {
   const getMatches = async () => {
-    let response = await fetch("http://localhost:3001/match/groupStage")
+    let response = await fetch(configuration.url + "match/groupStage")
       .then((response) => response.json())
       .then((data) => {
         return data.sort((a, b) => Number(a.teamA.name > b.teamA.name) * 2 - 1);
@@ -21,7 +22,6 @@ const Matches = () => {
   };
 
   const { data, status } = useQuery("matches", getMatches);
-
   const [matchesScores, setMatchesScores] = useState([]);
 
   const handleScore = (e, matchId) => {

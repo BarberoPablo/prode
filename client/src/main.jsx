@@ -6,7 +6,7 @@ import Login from "./Components/Login/Login";
 import NavBar from "./Components/NavBar/NavBar";
 import { QueryClientProvider, QueryClient } from "react-query";
 import AllMatches from "./Components/Matches/AllMatches";
-import Matches from "./Components/Matches/Matches";
+import Groups from "./Components/Groups/Groups";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -15,8 +15,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <QueryClientProvider client={queryClient}>
         <NavBar />
         <Routes>
-          <Route path="/login" element={<Login />} />
           <Route path="/partidos" element={<AllMatches />} />
+          <Route path="/grupos" element={<Groups />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/teams" element={<Teams />} />
         </Routes>
       </QueryClientProvider>
